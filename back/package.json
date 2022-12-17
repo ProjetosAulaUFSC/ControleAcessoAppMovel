@@ -1,0 +1,24 @@
+{
+  "name": "controle-acesso",
+  "version": "1.0.0",
+  "description": "projeto de controle de acesso para web",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProjetosAulaUFSC/ControleAcessoAppMovel.git"
+  },
+  "author": "Lucas Oliveira e Rodrigo Neves",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.8.0",
+    "nodemon": "^2.0.20",
+    "ws": "^8.11.0"
+  }
+}
