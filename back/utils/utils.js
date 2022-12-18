@@ -1,20 +1,15 @@
 const {json} = require('body-parser');
-const {Locker, Teacher} = require('../models/model');
+const {key, Teacher} = require('../models/model');
 
 module.exports = {
     async retLogin(name){
         try{
-            const data = await Teacher.find({name: name});
-            var aux = "";
-            for(i=0; i<data[0].keys.length; i++){
-                aux += data[0].keys[i];
-            }
-            console.log(aux);
-            return aux
-            
+            const data = await Teacher.aggregate([{$match:{name: name}}]);
+            return data.key;            
         }
         catch(error){
-            return 0;
+            console.log(error);
+            return "nenhuma sala, pois tivemos erro no sistema";
         }
     }
 }

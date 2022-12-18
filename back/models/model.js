@@ -11,7 +11,7 @@ const teacherSchema = new mongoose.Schema({
     key: [{type: String, required: true}]
 }, {versionKey: false})
 
-Locker = mongoose.model('person', lockSchema);
-Teacher = mongoose.model('stickers', teacherSchema);
+Key = mongoose.model('Key', lockSchema);
+Teacher = mongoose.model('Teacher', teacherSchema);
 
-module.exports = {Locker, Teacher}
+module.exports = {Key, Teacher}
