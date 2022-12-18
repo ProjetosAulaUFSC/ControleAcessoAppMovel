@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 const routes = require('./routes/routes');
-const utils = require('./utils/utils');
 const mongoString = process.env.DATABASE_URL;
 const express = require('express');
 const mongoose = require('mongoose');
@@ -12,7 +11,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(routes);
-// app.use('/img', express.static('static'));
 
 mongoose.connect(mongoString);
 
