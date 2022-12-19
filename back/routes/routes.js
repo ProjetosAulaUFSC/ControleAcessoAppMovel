@@ -1,4 +1,5 @@
 const {Key, Teacher, TeacherKey} = require('../models/model');
+const {token} = require('../utils/utils')
 const express = require('express');
 const router = express.Router();
 
@@ -8,8 +9,8 @@ router.post('/login', async (req, res)=>{
         if(data.length == 0) return  res.status(404).json("Professor não cadastrado");
         else if(data[0].password == req.body.password){
             console.log(data[0]);
-            if(data[0].name == "Admin")  return res.status(202).json({professor: data[0].name, fechadura: await Key.find({}, {lockId: 1, _id:0})});
-            else return res.status(202).json({professor: data[0].name, fechadura: await TeacherKey.find({teacherName: data[0].name}, {lockFID: 1, _id: 0, schedule: 1})});
+            if(data[0].name == "Admin")  return res.status(202).json({token: token.setToken("Admin",req.body.password), fechadura: await Key.find({}, {lockId: 1, _id:0})});
+            else return res.status(202).json({token: token.setToken(req.body.name, req.body.password), fechadura: await TeacherKey.find({teacherName: data[0].name}, {lockFID: 1, _id: 0, schedule: 1})});
         }
         else return  res.status(401).json("Senha incorreta");
     }
@@ -65,7 +66,8 @@ router.post('/register', async (req, res)=>{
         return res.status(400).json({message: error.message})
     }
 })
-router.post('/unlock', async (req,res)=>{
+
+router.post('/unlockDoor', async (req,res)=>{
     try{
         var flag = false;
         if(req.body.name == "Admin") return res.status(200).json({message: "Sala aberta", lockId: req.body.lockId, professor: "Admin"});
@@ -83,6 +85,24 @@ router.post('/unlock', async (req,res)=>{
     }
     catch(error){
         return error;
+    }
+})
+
+router.post('/request', async (req,res)=>{
+    try{
+        if(req.body.name){}
+    }
+    catch(error){
+
+    }
+})
+router.get('/request', async (req,res)=>{
+    try{
+        const data = await TeacherKey.find({accepted: false}, {_id: 0});
+        return res.status(200).json({data: data});
+    }
+    catch(error){
+
     }
 })
 
