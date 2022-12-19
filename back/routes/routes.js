@@ -1,5 +1,5 @@
 const {Key, Teacher, TeacherKey} = require('../models/model');
-const {token} = require('../utils/utils')
+const {token, setToken} = require('../utils/utils')
 const express = require('express');
 const router = express.Router();
 
@@ -9,8 +9,10 @@ router.post('/login', async (req, res)=>{
         if(data.length == 0) return  res.status(404).json("Professor não cadastrado");
         else if(data[0].password == req.body.password){
             console.log(data[0]);
-            if(data[0].name == "Admin")  return res.status(202).json({token: token.setToken("Admin",req.body.password), fechadura: await Key.find({}, {lockId: 1, _id:0})});
-            else return res.status(202).json({token: token.setToken(req.body.name, req.body.password), fechadura: await TeacherKey.find({teacherName: data[0].name}, {lockFID: 1, _id: 0, schedule: 1})});
+            const token = await setToken(req.body.name, req.body.password);
+            console.log(token);
+            if(data[0].name == "Admin")  return res.status(202).json({token: token, fechadura: await Key.find({}, {lockId: 1, _id:0})});
+            else return res.status(202).json({token: token, fechadura: await TeacherKey.find({teacherName: data[0].name}, {lockFID: 1, _id: 0, schedule: 1})});
         }
         else return  res.status(401).json("Senha incorreta");
     }

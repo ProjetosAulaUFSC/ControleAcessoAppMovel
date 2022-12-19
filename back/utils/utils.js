@@ -1,12 +1,13 @@
 require('dotenv').config();
-const JWT = require('jose');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
-    setToken(name, password){
+    async setToken(name, password){
         const payload = {
             "name" : name,
             "password" : password
         }
-        return HMACSHA256("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."+base64UrlEncode(payload),process.env.SECRET);
+        const token = jwt.sign(payload, process.env.SECRET, {"algorithm":"HS256"});
+        return token;
     }
 }
