@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const lockSchema = new mongoose.Schema({
-    lockId: {type: String, required:true}
+    lockId: {type: String, required:true},
+    ID: {type: Number, required:true}
     // password: {type: String, required: true}
 }, {versionKey: false})
 

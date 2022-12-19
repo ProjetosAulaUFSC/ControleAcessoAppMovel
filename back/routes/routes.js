@@ -111,23 +111,28 @@ router.get('/request', async (req,res)=>{
 router.post('/salas', async (req,res)=>{
     var docs = []
     var sala;
+    var aux = 0;
     for(i=101; i<121; i++){
         sala = new Key({lockId:"A"+i})
         docs.push(sala);
+        aux++;
     }   
     for(i=201; i<211; i++){
         sala = new Key({lockId:"A"+i})
         docs.push(sala);
+        aux++;
     }
     for(i=301; i<321; i++){
         sala = new Key({lockId:"A"+i})
         docs.push(sala);
+        aux++;
     }
     for(i=101; i<121; i++){
         sala = new Key({lockId:"C"+i})
         docs.push(sala);
+        aux++;
     }
-    // const salas = await Key.insertMany(docs);
+    const salas = await Key.insertMany(docs);
     return res.status(200).json("Salas cadastradas");
 })
 
