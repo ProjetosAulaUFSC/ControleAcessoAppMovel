@@ -1,5 +1,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const jwtDecode = require('jwt-decode');
 
 module.exports = {
     async setToken(name, password){
@@ -9,6 +10,10 @@ module.exports = {
         }
         const token = jwt.sign(payload, process.env.SECRET, {"algorithm":"HS256"});
         return token;
+    },
+    async readToken(token){
+        const decoded = jwtDecode(token);
+        return decoded.name;
     },
     async dealLock(name){
         const coisas = await TeacherKey.find({teacherName: name}, {lockFID: 1, _id: 0, schedule: 1});

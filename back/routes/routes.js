@@ -1,5 +1,5 @@
 const {Key, Teacher, TeacherKey} = require('../models/model');
-const {token, setToken, dealLock} = require('../utils/utils')
+const {readToken, setToken, dealLock} = require('../utils/utils')
 const express = require('express');
 const router = express.Router();
 
@@ -8,9 +8,7 @@ router.post('/login', async (req, res)=>{
         const data = await Teacher.aggregate([{$match:{name: req.body.name}}]);
         if(data.length == 0) return  res.status(404).json("Professor não cadastrado");
         else if(data[0].password == req.body.password){
-            console.log(data[0]);
             const token = await setToken(req.body.name, req.body.password);
-            console.log(token);
             return res.status(202).json({token: token, fechadura: await dealLock(data[0].name)});
         }
         else return  res.status(401).json("Senha incorreta");
@@ -119,22 +117,26 @@ router.post('/register', async (req, res)=>{
 
 router.post('/unlockDoor', async (req,res)=>{
     try{
+        user = await readToken(req.body.token);
+        console.log(user)
         var flag = false;
-        if(req.body.name == "Admin") return res.status(200).json({message: "Sala aberta", lockId: req.body.lockId, professor: "Admin"});
-        const user = await TeacherKey.aggregate([{$match:{teacherName: req.body.name}}]);
+        if(user == "Admin") return res.status(200).json({message: "Sala aberta", lockId: req.body.lockId, professor: "Admin"});
+        const user = await TeacherKey.aggregate([{$match:{teacherName: user}}]);
         if(user.length==0) return res.status(400).json("Docente não encontrado");
+        console.log("PASSOU AQUI")
         for(i=0;i<user.length;i++){
-            console.log(user[i].lockFID);
             if(req.body.lockId == user[i].lockFID){
+                console.log("PASSOU AQUI TBM")
                 const hour = new Date().toLocaleTimeString('en-GB', { hour: "numeric"});
                 if(hour>=req.body.inicio&&hour<req.body.fim){
+                    console.log("OPA, ENTROU!!!")
                     flag = true;
                     break;
                 }
                 else return res.status(403).json({message:"Hora inapropriada"});
             }
         }
-        if(flag) return res.status(200).json({message: "Sala aberta", lockId: req.body.lockId, professor: req.body.name});
+        if(flag) return res.status(200).json({message: "Sala aberta", lockId: req.body.lockId, professor: user});
         else return res.status(403).json({message: "Voce não tem autorizaçao para abrir essa sala"});
     }
     catch(error){
